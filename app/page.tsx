@@ -114,7 +114,6 @@ export default function Home() {
           </p>
         </div>
       </main>
-
       {/* Footer */}
       <footer className="p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
