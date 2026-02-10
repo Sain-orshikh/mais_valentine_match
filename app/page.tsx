@@ -54,12 +54,10 @@ export default function Home() {
         >
           <img
             src="/logo.png"
-            alt="Valentine.me logo"
-            className="w-10 h-10 object-contain"
+            alt="my-valentine.tech logo"
+            className="w-20 h-20 object-contain"
           />
-          <h1 className="text-xl font-semibold text-pink-400">
-            Valentine.me
-          </h1>
+          {/* Site name removed as requested */}
         </button>
       </header>
 
@@ -117,7 +115,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-center sm:text-left w-full sm:w-auto">© 2026 Valentine.me team. All rights reserved.</p>
+          <p className="text-center sm:text-left w-full sm:w-auto">© 2026 my-valentine.tech team. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -265,7 +265,7 @@ export default function AdminPage() {
             <Heart className="w-6 h-6 text-white fill-white" />
           </div>
           <h1 className="text-xl font-semibold text-pink-400">
-            Valentine.me
+            {/* Site name removed as requested */}
           </h1>
         </header>
 
@@ -347,7 +347,7 @@ export default function AdminPage() {
             <Heart className="w-6 h-6 text-white fill-white" />
           </div>
           <h1 className="text-xl font-semibold text-pink-400">
-            Valentine.me - Admin
+            {/* Site name removed as requested */}
           </h1>
         </button>
         <button

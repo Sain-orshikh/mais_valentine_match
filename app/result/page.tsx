@@ -24,12 +24,10 @@ function ResultContent() {
         >
           <img
             src="/logo.png"
-            alt="Valentine.me logo"
-            className="w-10 h-10 object-contain"
+            alt="my-valentine.tech logo"
+            className="w-12 h-12 object-contain"
           />
-          <h1 className="text-xl font-semibold text-pink-400">
-            Valentine.me
-          </h1>
+          {/* Site name removed as requested */}
         </button>
       </header>
 
@@ -66,7 +64,7 @@ function ResultContent() {
       {/* Footer */}
       <footer className="p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-2">
-          <p className="w-full text-left">© 2026 Valentine.me team. All rights reserved.</p>
+          <p className="w-full text-left">© 2026 my-valentine.tech team. All rights reserved.</p>
         </div>
       </footer>
 
