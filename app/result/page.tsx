@@ -1,16 +1,26 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { Heart, Home } from "lucide-react";
-import { Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { Heart } from "lucide-react";
+import { Suspense, useState, useEffect } from "react";
 
 function ResultContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const matchedName = searchParams.get("name") || "";
+  const [matchedName, setMatchedName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!matchedName) {
-    router.push("/");
+  useEffect(() => {
+    // Check if match exists in sessionStorage (prevents direct URL access)
+    const storedMatch = sessionStorage.getItem("valentineMatch");
+    if (!storedMatch) {
+      router.push("/");
+      return;
+    }
+    setMatchedName(storedMatch);
+    setIsLoading(false);
+  }, [router]);
+
+  if (isLoading || !matchedName) {
     return null;
   }
 
@@ -25,7 +35,7 @@ function ResultContent() {
           <img
             src="/logo.png"
             alt="my-valentine.tech logo"
-            className="w-12 h-12 object-contain"
+            className="w-20 h-20 object-contain"
           />
           {/* Site name removed as requested */}
         </button>
@@ -43,10 +53,10 @@ function ResultContent() {
 
           {/* Success Message */}
           <div className="space-y-4">
-            <p className="text-2xl font-semibold text-gray-900">
+            <p className="text-xl md:text-2xl font-semibold text-gray-900">
               Your match is set! Enjoy the event.
             </p>
-            <p className="text-lg text-gray-600 max-w-md mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-md mx-auto">
               We hope this Valentine&apos;s connection brings you joy and memorable
               moments!
             </p>
@@ -62,7 +72,7 @@ function ResultContent() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-6 p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
+      <footer className="mt-6 md:mt-0 p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-2">
           <p className="w-full text-left">© 2026 my-valentine.tech team. All rights reserved.</p>
         </div>
