@@ -155,7 +155,7 @@ export default function Home() {
                 }}
                 maxLength={4}
                 pattern="\d{4}"
-                className="w-full placeholder:text-gray-500 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent text-center text-xl md:text-2xl tracking-widest"
+                className="w-full placeholder:text-gray-500 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent text-center text-xl md:text-2xl tracking-widest text-black"
                 disabled={loading}
               />
             </div>
