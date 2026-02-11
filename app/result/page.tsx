@@ -62,7 +62,7 @@ function ResultContent() {
       </main>
 
       {/* Footer */}
-      <footer className="p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
+      <footer className="mt-6 p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-2">
           <p className="w-full text-left">© 2026 my-valentine.tech team. All rights reserved.</p>
         </div>

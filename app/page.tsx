@@ -88,7 +88,7 @@ export default function Home() {
                 }}
                 maxLength={4}
                 pattern="\d{4}"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent text-center text-2xl tracking-widest"
+                className="w-full placeholder:text-gray-500 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent text-center text-2xl tracking-widest"
                 disabled={loading}
               />
             </div>
@@ -113,7 +113,7 @@ export default function Home() {
         </div>
       </main>
       {/* Footer */}
-      <footer className="p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
+      <footer className="mt-6 p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-center sm:text-left w-full sm:w-auto">© 2026 my-valentine.tech team. All rights reserved.</p>
         </div>

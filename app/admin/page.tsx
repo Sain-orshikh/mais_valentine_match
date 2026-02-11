@@ -399,14 +399,14 @@ export default function AdminPage() {
                 }}
                 maxLength={4}
                 pattern="\d{4}"
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
               />
               <input
                 type="text"
                 placeholder="Username"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
               />
             </div>
 
@@ -444,7 +444,7 @@ export default function AdminPage() {
                 }}
                 maxLength={4}
                 pattern="\d{4}"
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
               />
               <input
                 type="text"
@@ -456,7 +456,7 @@ export default function AdminPage() {
                 }}
                 maxLength={4}
                 pattern="\d{4}"
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
               />
             </div>
 
@@ -484,7 +484,7 @@ export default function AdminPage() {
               placeholder="Search by User ID or username"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full pl-10 pr-4 py-2 placeholder:text-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
           </div>
 
