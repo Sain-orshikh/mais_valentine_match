@@ -81,7 +81,16 @@ export async function POST(request: NextRequest) {
 }
 
 function generateMatchesFile(matches: Match[]): string {
-  return `export interface Match {
+  const totalPairs = matches.length / 2;
+  const totalEntries = matches.length;
+  const timestamp = new Date().toISOString();
+  
+  return `// Auto-generated from pasted Excel data
+// Generated: ${timestamp}
+// Total pairs: ${totalPairs}
+// Total entries (bidirectional): ${totalEntries}
+
+export interface Match {
   userId: string;
   username: string;
   class: string;
@@ -91,23 +100,10 @@ function generateMatchesFile(matches: Match[]): string {
   challengeId: number;
 }
 
-// Static match data - Updated ${new Date().toISOString()}
 export const matches: Match[] = ${JSON.stringify(matches, null, 2)};
 
-// Helper function to find a match by userId
-export function findMatchByUserId(userId: string): Match | undefined {
-  return matches.find(match => match.userId === userId);
-}
-
-// Helper function to get all unique matches (each pair counted once)
-export function getUniqueMatches(): Match[] {
-  const seen = new Set<string>();
-  return matches.filter(match => {
-    const pairKey = [match.userId, match.matchedUserId].sort().join('-');
-    if (seen.has(pairKey)) return false;
-    seen.add(pairKey);
-    return true;
-  });
+export function findMatchByUserId(userId: string): Match | null {
+  return matches.find((match) => match.userId === userId) || null;
 }
 `;
 }
