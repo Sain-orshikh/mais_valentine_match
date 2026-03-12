@@ -1,8 +1,10 @@
 export interface Match {
   userId: string;
   username: string;
+  class: string;
   matchedUserId: string;
   matchedUsername: string;
+  matchedClass: string;
   challengeId: number;
 }
 
@@ -11,142 +13,182 @@ export interface Match {
 export const matches: Match[] = [
   {
     userId: "0001",
-    username: "Emma Johnson",
+    username: "Amarbat.S",
+    class: "26a",
     matchedUserId: "0002",
-    matchedUsername: "Liam Smith",
+    matchedUsername: "Ninjin.B",
+    matchedClass: "27d",
     challengeId: 0
   },
   {
     userId: "0002",
-    username: "Liam Smith",
+    username: "Ninjin.B",
+    class: "27d",
     matchedUserId: "0001",
-    matchedUsername: "Emma Johnson",
+    matchedUsername: "Amarbat.S",
+    matchedClass: "26a",
     challengeId: 0
   },
   {
     userId: "0103",
-    username: "Sophia Martinez",
+    username: "Boldkhang.T",
+    class: "27b",
     matchedUserId: "0104",
-    matchedUsername: "Noah Williams",
+    matchedUsername: "Anu.D",
+    matchedClass: "26a",
     challengeId: 3
   },
   {
     userId: "0104",
-    username: "Noah Williams",
+    username: "Anu.D",
+    class: "26a",
     matchedUserId: "0103",
-    matchedUsername: "Sophia Martinez",
+    matchedUsername: "Boldkhang.T",
+    matchedClass: "27b",
     challengeId: 3
   },
   {
     userId: "0205",
-    username: "Olivia Brown",
+    username: "Temuulen.K",
+    class: "26b",
     matchedUserId: "0206",
-    matchedUsername: "Ethan Davis",
+    matchedUsername: "Sarnai.G",
+    matchedClass: "27a",
     challengeId: 6
   },
   {
     userId: "0206",
-    username: "Ethan Davis",
+    username: "Sarnai.G",
+    class: "27a",
     matchedUserId: "0205",
-    matchedUsername: "Olivia Brown",
+    matchedUsername: "Temuulen.K",
+    matchedClass: "26b",
     challengeId: 6
   },
   {
     userId: "0307",
-    username: "Ava Garcia",
+    username: "Enkhjin.B",
+    class: "26c",
     matchedUserId: "0308",
-    matchedUsername: "Mason Rodriguez",
+    matchedUsername: "Narangerel.S",
+    matchedClass: "27c",
     challengeId: 2
   },
   {
     userId: "0308",
-    username: "Mason Rodriguez",
+    username: "Narangerel.S",
+    class: "27c",
     matchedUserId: "0307",
-    matchedUsername: "Ava Garcia",
+    matchedUsername: "Enkhjin.B",
+    matchedClass: "26c",
     challengeId: 2
   },
   {
     userId: "0409",
-    username: "Isabella Wilson",
+    username: "Batbayar.T",
+    class: "26d",
     matchedUserId: "0410",
-    matchedUsername: "James Anderson",
+    matchedUsername: "Oyunaa.D",
+    matchedClass: "27d",
     challengeId: 4
   },
   {
     userId: "0410",
-    username: "James Anderson",
+    username: "Oyunaa.D",
+    class: "27d",
     matchedUserId: "0409",
-    matchedUsername: "Isabella Wilson",
+    matchedUsername: "Batbayar.T",
+    matchedClass: "26d",
     challengeId: 4
   },
   {
     userId: "0511",
-    username: "Mia Thomas",
+    username: "Gantulga.M",
+    class: "26a",
     matchedUserId: "0512",
-    matchedUsername: "Benjamin Taylor",
+    matchedUsername: "Altantsetseg.B",
+    matchedClass: "27b",
     challengeId: 8
   },
   {
     userId: "0512",
-    username: "Benjamin Taylor",
+    username: "Altantsetseg.B",
+    class: "27b",
     matchedUserId: "0511",
-    matchedUsername: "Mia Thomas",
+    matchedUsername: "Gantulga.M",
+    matchedClass: "26a",
     challengeId: 8
   },
   {
     userId: "0613",
-    username: "Charlotte Moore",
+    username: "Munkhbat.E",
+    class: "26b",
     matchedUserId: "0614",
-    matchedUsername: "Lucas Jackson",
+    matchedUsername: "Saruul.L",
+    matchedClass: "27a",
     challengeId: 1
   },
   {
     userId: "0614",
-    username: "Lucas Jackson",
+    username: "Saruul.L",
+    class: "27a",
     matchedUserId: "0613",
-    matchedUsername: "Charlotte Moore",
+    matchedUsername: "Munkhbat.E",
+    matchedClass: "26b",
     challengeId: 1
   },
   {
     userId: "0715",
-    username: "Amelia Martin",
+    username: "Erdenebat.G",
+    class: "26c",
     matchedUserId: "0716",
-    matchedUsername: "Henry Lee",
+    matchedUsername: "Tsolmon.O",
+    matchedClass: "27c",
     challengeId: 5
   },
   {
     userId: "0716",
-    username: "Henry Lee",
+    username: "Tsolmon.O",
+    class: "27c",
     matchedUserId: "0715",
-    matchedUsername: "Amelia Martin",
+    matchedUsername: "Erdenebat.G",
+    matchedClass: "26c",
     challengeId: 5
   },
   {
     userId: "0817",
-    username: "Harper White",
+    username: "Bat-Erdene.N",
+    class: "26d",
     matchedUserId: "0818",
-    matchedUsername: "Alexander Harris",
+    matchedUsername: "Tuvshinzaya.K",
+    matchedClass: "27d",
     challengeId: 3
   },
   {
     userId: "0818",
-    username: "Alexander Harris",
+    username: "Tuvshinzaya.K",
+    class: "27d",
     matchedUserId: "0817",
-    matchedUsername: "Harper White",
+    matchedUsername: "Bat-Erdene.N",
+    matchedClass: "26d",
     challengeId: 3
   },
   {
     userId: "0919",
-    username: "Evelyn Clark",
+    username: "Enkh-Amgalan.S",
+    class: "26a",
     matchedUserId: "0920",
-    matchedUsername: "Sebastian Lewis",
+    matchedUsername: "Gerelchimeg.T",
+    matchedClass: "27b",
     challengeId: 7
   },
   {
     userId: "0920",
-    username: "Sebastian Lewis",
+    username: "Gerelchimeg.T",
+    class: "27b",
     matchedUserId: "0919",
-    matchedUsername: "Evelyn Clark",
+    matchedUsername: "Enkh-Amgalan.S",
+    matchedClass: "26a",
     challengeId: 7
   }
 ];

@@ -12,12 +12,14 @@ interface Challenge {
 function ResultContent() {
   const router = useRouter();
   const [matchedName, setMatchedName] = useState<string | null>(null);
+  const [matchedClass, setMatchedClass] = useState<string | null>(null);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if match exists in sessionStorage (prevents direct URL access)
     const storedMatch = sessionStorage.getItem("valentineMatch");
+    const storedClass = sessionStorage.getItem("valentineClass");
     const storedChallenge = sessionStorage.getItem("valentineChallenge");
     
     if (!storedMatch) {
@@ -26,6 +28,7 @@ function ResultContent() {
     }
     
     setMatchedName(storedMatch);
+    setMatchedClass(storedClass);
     
     if (storedChallenge) {
       try {
@@ -67,6 +70,11 @@ function ResultContent() {
             <h2 className="text-5xl md:text-7xl font-bold text-pink-400 mb-6 animate-fade-in">
               {matchedName}
             </h2>
+            {matchedClass && (
+              <p className="text-2xl md:text-3xl font-semibold text-gray-600 mb-6">
+                Class {matchedClass}
+              </p>
+            )}
             
             {/* Success Message */}
             <div className="space-y-4">

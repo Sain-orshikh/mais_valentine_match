@@ -4,8 +4,10 @@ import { GitHubClient } from "@/lib/github";
 interface Match {
   userId: string;
   username: string;
+  class: string;
   matchedUserId: string;
   matchedUsername: string;
+  matchedClass: string;
   challengeId: number;
 }
 
@@ -29,13 +31,13 @@ export async function POST(request: NextRequest) {
     }
 
     for (const match of matches) {
-      if (!match.userId || !match.username || !match.matchedUserId || !match.matchedUsername) {
+      if (!match.userId || !match.username || !match.class || !match.matchedUserId || !match.matchedUsername || !match.matchedClass) {
         return NextResponse.json(
           { error: "Invalid match format" },
           { status: 400 }
         );
       }
-      if (typeof match.challengeId !== 'number' || match.challengeId < 0 || match.challengeId > 9) {
+      if (typeof match.challengeId !== 'number' || match.challengeId < 0 || match.challengeId > 8) {
         return NextResponse.json(
           { error: "Invalid challengeId" },
           { status: 400 }
@@ -82,8 +84,10 @@ function generateMatchesFile(matches: Match[]): string {
   return `export interface Match {
   userId: string;
   username: string;
+  class: string;
   matchedUserId: string;
   matchedUsername: string;
+  matchedClass: string;
   challengeId: number;
 }
 

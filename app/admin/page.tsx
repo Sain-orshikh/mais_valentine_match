@@ -6,8 +6,10 @@ import { Heart, Search, Plus, Lock, Download, RefreshCw, Trash2 } from "lucide-r
 interface Match {
   userId: string;
   username: string;
+  class: string;
   matchedUserId: string;
   matchedUsername: string;
+  matchedClass: string;
   challengeId: number;
 }
 
@@ -38,8 +40,10 @@ export default function AdminPage() {
   // Form states for adding new match pair
   const [userId1, setUserId1] = useState("");
   const [username1, setUsername1] = useState("");
+  const [class1, setClass1] = useState("");
   const [userId2, setUserId2] = useState("");
   const [username2, setUsername2] = useState("");
+  const [class2, setClass2] = useState("");
   
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -132,7 +136,7 @@ export default function AdminPage() {
     setSuccess("");
 
     // Validation
-    if (!userId1 || !username1 || !userId2 || !username2) {
+    if (!userId1 || !username1 || !class1 || !userId2 || !username2 || !class2) {
       setError("All fields are required");
       return;
     }
@@ -163,15 +167,19 @@ export default function AdminPage() {
       {
         userId: userId1.trim(),
         username: username1.trim(),
+        class: class1.trim(),
         matchedUserId: userId2.trim(),
         matchedUsername: username2.trim(),
+        matchedClass: class2.trim(),
         challengeId: challengeNum,
       },
       {
         userId: userId2.trim(),
         username: username2.trim(),
+        class: class2.trim(),
         matchedUserId: userId1.trim(),
         matchedUsername: username1.trim(),
+        matchedClass: class1.trim(),
         challengeId: challengeNum,
       },
     ];
@@ -182,8 +190,10 @@ export default function AdminPage() {
     // Reset form
     setUserId1("");
     setUsername1("");
+    setClass1("");
     setUserId2("");
     setUsername2("");
+    setClass2("");
   };
 
   const handleDeleteMatchPair = async (userId: string) => {
@@ -422,9 +432,16 @@ export default function AdminPage() {
                 />
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder="Name (e.g., Amarbat.S)"
                   value={username1}
                   onChange={(e) => setUsername1(e.target.value)}
+                  className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
+                />
+                <input
+                  type="text"
+                  placeholder="Class (e.g., 26a)"
+                  value={class1}
+                  onChange={(e) => setClass1(e.target.value.toLowerCase())}
                   className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
                 />
               </div>
@@ -441,9 +458,16 @@ export default function AdminPage() {
                 />
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder="Name (e.g., Ninjin.B)"
                   value={username2}
                   onChange={(e) => setUsername2(e.target.value)}
+                  className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
+                />
+                <input
+                  type="text"
+                  placeholder="Class (e.g., 27d)"
+                  value={class2}
+                  onChange={(e) => setClass2(e.target.value.toLowerCase())}
                   className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
                 />
               </div>

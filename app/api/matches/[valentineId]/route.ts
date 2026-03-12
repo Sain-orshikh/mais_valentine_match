@@ -70,6 +70,7 @@ export async function GET(
 
     return NextResponse.json({
       matchedName: match.matchedUsername,
+      matchedClass: match.matchedClass,
       matchedId: match.matchedUserId,
       challenge: challenge,
     });

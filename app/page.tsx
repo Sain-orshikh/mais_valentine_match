@@ -106,6 +106,9 @@ export default function Home() {
 
       // Store match and challenge in sessionStorage to prevent direct URL access
       sessionStorage.setItem("valentineMatch", data.matchedName);
+      if (data.matchedClass) {
+        sessionStorage.setItem("valentineClass", data.matchedClass);
+      }
       if (data.challenge) {
         sessionStorage.setItem("valentineChallenge", JSON.stringify(data.challenge));
       }
