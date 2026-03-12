@@ -42,14 +42,14 @@ export const matches: Match[] = [
     username: "Olivia Brown",
     matchedUserId: "0206",
     matchedUsername: "Ethan Davis",
-    challengeId: 7
+    challengeId: 6
   },
   {
     userId: "0206",
     username: "Ethan Davis",
     matchedUserId: "0205",
     matchedUsername: "Olivia Brown",
-    challengeId: 7
+    challengeId: 6
   },
   {
     userId: "0307",
@@ -70,28 +70,28 @@ export const matches: Match[] = [
     username: "Isabella Wilson",
     matchedUserId: "0410",
     matchedUsername: "James Anderson",
-    challengeId: 5
+    challengeId: 4
   },
   {
     userId: "0410",
     username: "James Anderson",
     matchedUserId: "0409",
     matchedUsername: "Isabella Wilson",
-    challengeId: 5
+    challengeId: 4
   },
   {
     userId: "0511",
     username: "Mia Thomas",
     matchedUserId: "0512",
     matchedUsername: "Benjamin Taylor",
-    challengeId: 9
+    challengeId: 8
   },
   {
     userId: "0512",
     username: "Benjamin Taylor",
     matchedUserId: "0511",
     matchedUsername: "Mia Thomas",
-    challengeId: 9
+    challengeId: 8
   },
   {
     userId: "0613",
@@ -112,42 +112,42 @@ export const matches: Match[] = [
     username: "Amelia Martin",
     matchedUserId: "0716",
     matchedUsername: "Henry Lee",
-    challengeId: 6
+    challengeId: 5
   },
   {
     userId: "0716",
     username: "Henry Lee",
     matchedUserId: "0715",
     matchedUsername: "Amelia Martin",
-    challengeId: 6
+    challengeId: 5
   },
   {
     userId: "0817",
     username: "Harper White",
     matchedUserId: "0818",
     matchedUsername: "Alexander Harris",
-    challengeId: 4
+    challengeId: 3
   },
   {
     userId: "0818",
     username: "Alexander Harris",
     matchedUserId: "0817",
     matchedUsername: "Harper White",
-    challengeId: 4
+    challengeId: 3
   },
   {
     userId: "0919",
     username: "Evelyn Clark",
     matchedUserId: "0920",
     matchedUsername: "Sebastian Lewis",
-    challengeId: 8
+    challengeId: 7
   },
   {
     userId: "0920",
     username: "Sebastian Lewis",
     matchedUserId: "0919",
     matchedUsername: "Evelyn Clark",
-    challengeId: 8
+    challengeId: 7
   }
 ];
 

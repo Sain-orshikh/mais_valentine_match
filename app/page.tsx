@@ -87,7 +87,11 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/matches/${valentineId.trim()}`);
+      // Add artificial delay to make it feel more real (static data is instant)
+      const [response] = await Promise.all([
+        fetch(`/api/matches/${valentineId.trim()}`),
+        new Promise(resolve => setTimeout(resolve, 1200))
+      ]);
       const data = await response.json();
 
       if (!response.ok) {
@@ -124,7 +128,7 @@ export default function Home() {
         >
           <img
             src="/logo.png"
-            alt="my-valentine.tech logo"
+            alt="mais-valentine.me logo"
             className="w-20 h-20 object-contain"
           />
           {/* Site name removed as requested */}
@@ -204,7 +208,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-16 md:mt-0 p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-center sm:text-left w-full sm:w-auto">© 2026 my-valentine.tech team. All rights reserved.</p>
+          <p className="text-center sm:text-left w-full sm:w-auto">© 2026 mais-valentine.me team. All rights reserved.</p>
         </div>
       </footer>
     </div>

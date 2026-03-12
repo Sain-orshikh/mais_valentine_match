@@ -19,15 +19,15 @@ export const metadata: Metadata = {
   description: "Find your Valentine match! Enter your student ID to reveal your connection this Valentine's Day.",
   openGraph: {
     title: "Discover your Valentine match!",
-    description: "Find your Valentine match at my-valentine.tech!",
-    url: "https://www.my-valentine.tech/",
-    siteName: "my-valentine.tech",
+    description: "Find your Valentine match at mais-valentine.me!",
+    url: "https://www.mais-valentine.me/",
+    siteName: "mais-valentine.me",
     images: [
       {
-        url: "https://www.my-valentine.tech/high-res-logo.jpg",
+        url: "https://www.mais-valentine.me/high-res-logo.jpg",
         width: 1200,
         height: 630,
-        alt: "my-valentine.tech logo",
+        alt: "mais-valentine.me logo",
       },
     ],
     type: "website",
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Discover your Valentine match!",
-    description: "Find your Valentine match at my-valentine.tech!",
-    images: ["https://www.my-valentine.tech/high-res-logo.jpg"],
+    description: "Find your Valentine match at mais-valentine.me!",
+    images: ["https://www.mais-valentine.me/high-res-logo.jpg"],
     site: "@myvalentinetech",
   },
 };

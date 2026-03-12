@@ -52,7 +52,7 @@ function ResultContent() {
         >
           <img
             src="/logo.png"
-            alt="my-valentine.tech logo"
+            alt="mais-valentine.me logo"
             className="w-20 h-20 object-contain"
           />
           {/* Site name removed as requested */}
@@ -86,7 +86,7 @@ function ResultContent() {
               <div className="flex items-center justify-center gap-2 mb-4">
                 <Sparkles className="w-6 h-6 text-pink-400" />
                 <h3 className="text-2xl font-bold text-gray-900">
-                  Your Special Challenge
+                  Valen-Smile Challenge
                 </h3>
                 <Sparkles className="w-6 h-6 text-pink-400" />
               </div>
@@ -118,7 +118,7 @@ function ResultContent() {
       {/* Footer */}
       <footer className="mt-16 md:mt-0 p-6 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-2">
-          <p className="w-full text-left">© 2026 my-valentine.tech team. All rights reserved.</p>
+          <p className="w-full text-left">© 2026 mais-valentine.me team. All rights reserved.</p>
         </div>
       </footer>
 

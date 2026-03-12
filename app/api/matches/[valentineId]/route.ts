@@ -19,10 +19,6 @@ const CHALLENGES = [
     description: "Recreate a funny or dramatic pose together (movie pose, heart pose, superhero pose) and post it on your story."
   },
   {
-    title: "Kindness Mission",
-    description: "As a pair, do one small act of kindness for someone at school (help carry books, give candy, etc.) and take a photo after."
-  },
-  {
     title: "School Landmark Tour",
     description: "Take a photo together at three different spots around school (library, hallway, school logo, field, etc.)."
   },

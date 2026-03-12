@@ -16,7 +16,6 @@ const CHALLENGE_NAMES = [
   "Compliment Exchange",
   "Teacher Photo Challenge",
   "Matching Pose",
-  "Kindness Mission",
   "School Landmark Tour",
   "Interview Challenge",
   "Matching Energy Video",
@@ -155,8 +154,8 @@ export default function AdminPage() {
       return;
     }
 
-    // Randomly assign challenge (0-9)
-    const challengeNum = Math.floor(Math.random() * 10);
+    // Randomly assign challenge (0-8, total 9 challenges)
+    const challengeNum = Math.floor(Math.random() * 9);
 
     // Create new match pair (both directions)
     const newMatches = [
