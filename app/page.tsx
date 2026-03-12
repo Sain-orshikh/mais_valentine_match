@@ -100,8 +100,11 @@ export default function Home() {
       recordRequest();
       checkAndUpdateCooldown();
 
-      // Store match in sessionStorage to prevent direct URL access
+      // Store match and challenge in sessionStorage to prevent direct URL access
       sessionStorage.setItem("valentineMatch", data.matchedName);
+      if (data.challenge) {
+        sessionStorage.setItem("valentineChallenge", JSON.stringify(data.challenge));
+      }
 
       // Navigate to result page
       router.push("/result");

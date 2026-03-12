@@ -1,38 +1,50 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Heart, Search, Trash2, Plus, Lock, Users, Link as LinkIcon } from "lucide-react";
+import { Heart, Search, Plus, Lock, Download, RefreshCw, Trash2 } from "lucide-react";
 
-interface User {
-  _id: string;
+interface Match {
   userId: string;
   username: string;
-  matchedUserId: string | null;
+  matchedUserId: string;
+  matchedUsername: string;
+  challengeId: number;
 }
+
+const CHALLENGE_NAMES = [
+  "Partner Reveal Selfie",
+  "Compliment Exchange",
+  "Teacher Photo Challenge",
+  "Matching Pose",
+  "Kindness Mission",
+  "School Landmark Tour",
+  "Interview Challenge",
+  "Matching Energy Video",
+  "Creative Duo Photo",
+  "Final Heart Photo",
+];
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
-  const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   
-  // User form states
-  const [newUserId, setNewUserId] = useState("");
-  const [newUsername, setNewUsername] = useState("");
-  
-  // Match form states
-  const [matchUserId1, setMatchUserId1] = useState("");
-  const [matchUserId2, setMatchUserId2] = useState("");
+  // Form states for adding new match pair
+  const [userId1, setUserId1] = useState("");
+  const [username1, setUsername1] = useState("");
+  const [userId2, setUserId2] = useState("");
+  const [username2, setUsername2] = useState("");
   
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [deploying, setDeploying] = useState(false);
 
   // Check authentication on mount
   useEffect(() => {
@@ -45,23 +57,25 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchUsers();
+      fetchMatches();
     }
   }, [isAuthenticated]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
-      setFilteredUsers(users);
+      setFilteredMatches(matches);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = users.filter(
-        (user) =>
-          user.userId.toLowerCase().includes(query) ||
-          user.username.toLowerCase().includes(query)
+      const filtered = matches.filter(
+        (match) =>
+          match.userId.toLowerCase().includes(query) ||
+          match.username.toLowerCase().includes(query) ||
+          match.matchedUserId.toLowerCase().includes(query) ||
+          match.matchedUsername.toLowerCase().includes(query)
       );
-      setFilteredUsers(filtered);
+      setFilteredMatches(filtered);
     }
-  }, [searchQuery, users]);
+  }, [searchQuery, matches]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +87,6 @@ export default function AdminPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: loginUsername,
           password: loginPassword,
         }),
       });
@@ -83,10 +96,9 @@ export default function AdminPage() {
       if (response.ok) {
         localStorage.setItem("adminAuth", "authenticated");
         setIsAuthenticated(true);
-        setLoginUsername("");
         setLoginPassword("");
       } else {
-        setLoginError(data.error || "Invalid credentials");
+        setLoginError(data.error || "Invalid password");
       }
     } catch {
       setLoginError("An error occurred. Please try again.");
@@ -100,151 +112,154 @@ export default function AdminPage() {
     setIsAuthenticated(false);
   };
 
-  const fetchUsers = async () => {
+  const fetchMatches = async () => {
     try {
-      const response = await fetch("/api/users");
+      const response = await fetch("/api/admin/matches");
       if (response.ok) {
         const data = await response.json();
-        setUsers(data);
-        setFilteredUsers(data);
+        setMatches(data);
+        setFilteredMatches(data);
       }
     } catch (err) {
-      console.error("Failed to fetch users:", err);
+      console.error("Failed to fetch matches:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddUser = async (e: React.FormEvent) => {
+  const handleAddMatchPair = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!newUserId || !newUsername) {
-      setError("User ID and username are required");
+    // Validation
+    if (!userId1 || !username1 || !userId2 || !username2) {
+      setError("All fields are required");
       return;
     }
 
-    if (!/^\d{4}$/.test(newUserId.trim())) {
-      setError("User ID must be exactly 4 digits");
+    if (!/^\d{4}$/.test(userId1.trim()) || !/^\d{4}$/.test(userId2.trim())) {
+      setError("User IDs must be exactly 4 digits");
       return;
     }
 
-    try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: newUserId.trim(),
-          username: newUsername.trim(),
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Failed to add user");
-        return;
-      }
-
-      setSuccess("User added successfully!");
-      setNewUserId("");
-      setNewUsername("");
-      fetchUsers();
-    } catch {
-      setError("An error occurred. Please try again.");
-    }
-  };
-
-  const handleCreateMatch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    if (!matchUserId1 || !matchUserId2) {
-      setError("Both user IDs are required");
-      return;
-    }
-
-    if (matchUserId1 === matchUserId2) {
+    if (userId1 === userId2) {
       setError("Cannot match a user with themselves");
       return;
     }
 
+    // Check if IDs already exist
+    const existingIds = new Set(matches.map(m => m.userId));
+    if (existingIds.has(userId1.trim()) || existingIds.has(userId2.trim())) {
+      setError("One or both user IDs already exist");
+      return;
+    }
+
+    // Randomly assign challenge (0-9)
+    const challengeNum = Math.floor(Math.random() * 10);
+
+    // Create new match pair (both directions)
+    const newMatches = [
+      ...matches,
+      {
+        userId: userId1.trim(),
+        username: username1.trim(),
+        matchedUserId: userId2.trim(),
+        matchedUsername: username2.trim(),
+        challengeId: challengeNum,
+      },
+      {
+        userId: userId2.trim(),
+        username: username2.trim(),
+        matchedUserId: userId1.trim(),
+        matchedUsername: username1.trim(),
+        challengeId: challengeNum,
+      },
+    ];
+
+    // Deploy to GitHub
+    await deployMatches(newMatches);
+
+    // Reset form
+    setUserId1("");
+    setUsername1("");
+    setUserId2("");
+    setUsername2("");
+  };
+
+  const handleDeleteMatchPair = async (userId: string) => {
+    const match = matches.find(m => m.userId === userId);
+    if (!match) return;
+
+    if (!confirm(`Delete match pair: ${match.username} ↔ ${match.matchedUsername}?`)) {
+      return;
+    }
+
+    // Remove both directions of the match
+    const newMatches = matches.filter(
+      m => !(m.userId === userId || m.userId === match.matchedUserId || 
+             m.matchedUserId === userId || m.matchedUserId === match.matchedUserId)
+    );
+
+    await deployMatches(newMatches);
+  };
+
+  const deployMatches = async (newMatches: Match[]) => {
+    setDeploying(true);
+    setError("");
+    setSuccess("");
+
     try {
-      const response = await fetch("/api/users/match", {
+      const password = prompt("Enter admin password to deploy:");
+      if (!password) {
+        setDeploying(false);
+        return;
+      }
+
+      const response = await fetch("/api/matches/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId1: matchUserId1.trim(),
-          userId2: matchUserId2.trim(),
+          matches: newMatches,
+          adminPassword: password,
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        setError(data.error || "Failed to create match");
-        return;
-      }
-
-      setSuccess("Match created successfully!");
-      setMatchUserId1("");
-      setMatchUserId2("");
-      fetchUsers();
-    } catch {
-      setError("An error occurred. Please try again.");
-    }
-  };
-
-  const handleDeleteUser = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this user? This will also remove any matches.")) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/users/delete/${id}`, {
-        method: "DELETE",
-      });
-
       if (response.ok) {
-        setSuccess("User deleted successfully!");
-        fetchUsers();
+        setSuccess(`✅ Deployed successfully! ${data.matchCount} entries. Vercel will redeploy in ~1-2 minutes.`);
+        setMatches(newMatches);
+        setFilteredMatches(newMatches);
       } else {
-        setError("Failed to delete user");
+        setError(data.error || "Failed to deploy");
       }
-    } catch {
-      setError("An error occurred while deleting");
+    } catch (err) {
+      setError("An error occurred during deployment");
+      console.error(err);
+    } finally {
+      setDeploying(false);
     }
   };
 
-  const handleRemoveMatch = async (userId: string) => {
-    if (!confirm("Are you sure you want to remove this match?")) {
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/users/match", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-
-      if (response.ok) {
-        setSuccess("Match removed successfully!");
-        fetchUsers();
-      } else {
-        setError("Failed to remove match");
-      }
-    } catch {
-      setError("An error occurred while removing match");
-    }
+  const exportToJSON = () => {
+    const dataStr = JSON.stringify(matches, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `matches-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
   };
 
-  const getMatchedUsername = (matchedUserId: string | null) => {
-    if (!matchedUserId) return null;
-    const matched = users.find((u) => u.userId === matchedUserId);
-    return matched ? matched.username : null;
+  const getUniquePairs = () => {
+    const seen = new Set<string>();
+    return matches.filter(match => {
+      const pairKey = [match.userId, match.matchedUserId].sort().join('-');
+      if (seen.has(pairKey)) return false;
+      seen.add(pairKey);
+      return true;
+    });
   };
 
   // Show loading while checking authentication
@@ -265,7 +280,7 @@ export default function AdminPage() {
             <Heart className="w-6 h-6 text-white fill-white" />
           </div>
           <h1 className="text-xl font-semibold text-pink-400">
-            {/* Site name removed as requested */}
+            Admin Panel
           </h1>
         </header>
 
@@ -281,7 +296,7 @@ export default function AdminPage() {
               Admin Login
             </h2>
             <p className="text-center text-gray-600 mb-6">
-              Enter your credentials to access the admin panel
+              Enter admin password to manage matches
             </p>
 
             {loginError && (
@@ -293,21 +308,6 @@ export default function AdminPage() {
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  value={loginUsername}
-                  onChange={(e) => setLoginUsername(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder:text-gray-500 text-black"
-                  placeholder="Enter username"
-                  disabled={loginLoading}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Password
                 </label>
                 <input
@@ -315,9 +315,10 @@ export default function AdminPage() {
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder:text-gray-500 text-black"
-                  placeholder="Enter password"
+                  placeholder="Enter admin password"
                   disabled={loginLoading}
                   required
+                  autoFocus
                 />
               </div>
 
@@ -335,6 +336,8 @@ export default function AdminPage() {
     );
   }
 
+  const uniquePairs = getUniquePairs();
+
   return (
     <div className="min-h-screen bg-linear-to-b from-pink-50 to-white">
       {/* Header */}
@@ -347,21 +350,33 @@ export default function AdminPage() {
             <Heart className="w-6 h-6 text-white fill-white" />
           </div>
           <h1 className="text-xl font-semibold text-pink-400">
-            {/* Site name removed as requested */}
+            Admin Panel - Static Matches
           </h1>
         </button>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Logout
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={exportToJSON}
+            className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Export JSON
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       </header>
 
       <main className="max-w-6xl mx-auto p-6 space-y-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Admin Panel: Manage Users & Matches
-        </h1>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p className="text-sm text-blue-900">
+            <strong>ℹ️ Static Mode:</strong> Matches are stored in <code className="bg-blue-100 px-1 rounded">data/matches.ts</code>.
+            Changes deploy to GitHub and trigger Vercel rebuild (~1-2 min). Total: <strong>{matches.length} entries ({uniquePairs.length} pairs)</strong>
+          </p>
+        </div>
 
         {/* Notifications */}
         {error && (
@@ -375,105 +390,81 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* SECTION 1: Add Users */}
+        {deploying && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg flex items-center gap-2">
+            <RefreshCw className="w-4 h-4 animate-spin" />
+            Deploying to GitHub and triggering Vercel rebuild...
+          </div>
+        )}
+
+        {/* Add Match Pair Form */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Users className="w-6 h-6 text-pink-400" />
+            <Plus className="w-6 h-6 text-pink-400" />
             <h2 className="text-xl font-semibold text-gray-900">
-              Section 1: Add Users/Accounts
+              Add New Match Pair
             </h2>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            Add users with their 4-digit ID and username. Matches will be created in Section 2 below.
+            Creates both directions of the match with a randomly assigned challenge. Changes deploy to GitHub automatically.
           </p>
 
-          <form onSubmit={handleAddUser} className="space-y-4">
+          <form onSubmit={handleAddMatchPair} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="User ID (4 digits)"
-                value={newUserId}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                  setNewUserId(value);
-                }}
-                maxLength={4}
-                pattern="\d{4}"
-                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
-              />
-              <input
-                type="text"
-                placeholder="Username"
-                value={newUsername}
-                onChange={(e) => setNewUsername(e.target.value)}
-                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
-              />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Person 1</label>
+                <input
+                  type="text"
+                  placeholder="User ID (4 digits)"
+                  value={userId1}
+                  onChange={(e) => setUserId1(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  maxLength={4}
+                  className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
+                />
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username1}
+                  onChange={(e) => setUsername1(e.target.value)}
+                  className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Person 2</label>
+                <input
+                  type="text"
+                  placeholder="User ID (4 digits)"
+                  value={userId2}
+                  onChange={(e) => setUserId2(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  maxLength={4}
+                  className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
+                />
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username2}
+                  onChange={(e) => setUsername2(e.target.value)}
+                  className="w-full px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
+                />
+              </div>
             </div>
 
             <button
               type="submit"
-              className="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-6 py-2 rounded-lg transition-colors"
+              disabled={deploying}
+              className="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50"
             >
               <Plus className="w-4 h-4" />
-              Add User
+              Add Match Pair & Deploy
             </button>
           </form>
         </div>
 
-        {/* SECTION 2: Create Matches */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <LinkIcon className="w-6 h-6 text-pink-400" />
-            <h2 className="text-xl font-semibold text-gray-900">
-              Section 2: Create Matches
-            </h2>
-          </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Enter two user IDs to create a match between them.
-          </p>
-
-          <form onSubmit={handleCreateMatch} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="User ID 1 (4 digits)"
-                value={matchUserId1}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                  setMatchUserId1(value);
-                }}
-                maxLength={4}
-                pattern="\d{4}"
-                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
-              />
-              <input
-                type="text"
-                placeholder="User ID 2 (4 digits)"
-                value={matchUserId2}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                  setMatchUserId2(value);
-                }}
-                maxLength={4}
-                pattern="\d{4}"
-                className="px-4 py-2 border placeholder:text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-6 py-2 rounded-lg transition-colors"
-            >
-              <LinkIcon className="w-4 h-4" />
-              Create Match
-            </button>
-          </form>
-        </div>
-
-        {/* All Users Table */}
+        {/* All Match Pairs */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            All Users
+            All Match Pairs ({uniquePairs.length})
           </h2>
 
           {/* Search Bar */}
@@ -491,72 +482,60 @@ export default function AdminPage() {
           {/* Table */}
           {loading ? (
             <div className="text-center py-8 text-gray-500">Loading...</div>
-          ) : filteredUsers.length === 0 ? (
+          ) : getUniquePairs().length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              {searchQuery ? "No users found" : "No users yet"}
+              {searchQuery ? "No matches found" : "No matches yet"}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
-                      User ID
-                    </th>
-                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
-                      Username
-                    </th>
-                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
-                      Matched With
-                    </th>
-                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
-                      Actions
-                    </th>
+                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">Person 1</th>
+                    <th className="text-center px-4 py-3 text-sm font-semibold text-gray-700">↔</th>
+                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">Person 2</th>
+                    <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">Challenge</th>
+                    <th className="text-center px-4 py-3 text-sm font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((user) => {
-                    const matchedUsername = getMatchedUsername(user.matchedUserId);
-                    return (
-                      <tr
-                        key={user._id}
-                        className="border-b border-gray-100 hover:bg-gray-50"
-                      >
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {user.userId}
+                  {getUniquePairs()
+                    .filter(match => {
+                      if (!searchQuery) return true;
+                      const q = searchQuery.toLowerCase();
+                      return match.userId.toLowerCase().includes(q) ||
+                             match.username.toLowerCase().includes(q) ||
+                             match.matchedUserId.toLowerCase().includes(q) ||
+                             match.matchedUsername.toLowerCase().includes(q);
+                    })
+                    .map((match) => (
+                      <tr key={`${match.userId}-${match.matchedUserId}`} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="px-4 py-3 text-sm">
+                          <div className="font-medium text-gray-900">{match.username}</div>
+                          <div className="text-gray-500">{match.userId}</div>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {user.username}
+                        <td className="text-center px-4 py-3">
+                          <Heart className="w-4 h-4 text-pink-400 fill-pink-400 mx-auto" />
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {user.matchedUserId ? (
-                            <span className="text-green-600">
-                              {user.matchedUserId} ({matchedUsername || "Unknown"})
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">Not matched</span>
-                          )}
+                        <td className="px-4 py-3 text-sm">
+                          <div className="font-medium text-gray-900">{match.matchedUsername}</div>
+                          <div className="text-gray-500">{match.matchedUserId}</div>
                         </td>
-                        <td className="px-4 py-3 flex gap-2">
-                          {user.matchedUserId && (
-                            <button
-                              onClick={() => handleRemoveMatch(user.userId)}
-                              className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-2 py-1 rounded transition-colors"
-                            >
-                              Unmatch
-                            </button>
-                          )}
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          {match.challengeId}: {CHALLENGE_NAMES[match.challengeId]}
+                        </td>
+                        <td className="px-4 py-3 text-center">
                           <button
-                            onClick={() => handleDeleteUser(user._id)}
-                            className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded transition-colors"
+                            onClick={() => handleDeleteMatchPair(match.userId)}
+                            disabled={deploying}
+                            className="inline-flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded transition-colors disabled:opacity-50"
                           >
                             <Trash2 className="w-3 h-3" />
                             Delete
                           </button>
                         </td>
                       </tr>
-                    );
-                  })}
+                    ))}
                 </tbody>
               </table>
             </div>
