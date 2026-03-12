@@ -25,7 +25,7 @@ export class GitHubClient {
 
   private get headers() {
     return {
-      'Authorization': `Bearer ${this.token}`,
+      'Authorization': `token ${this.token}`,
       'Accept': 'application/vnd.github.v3+json',
       'Content-Type': 'application/json',
     };
