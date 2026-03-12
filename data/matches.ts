@@ -8,8 +8,7 @@ export interface Match {
   challengeId: number;
 }
 
-// Static match data - 10 sample matches for testing
-// Update this file and push to GitHub to redeploy with new data
+// Static match data - Updated 2026-03-12T16:55:44.415Z
 export const matches: Match[] = [
   {
     userId: "0001",
