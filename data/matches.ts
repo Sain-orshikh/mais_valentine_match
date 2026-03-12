@@ -93,7 +93,7 @@ export const matches: Match[] = [
     "matchedUserId": "0594",
     "matchedUsername": "Batgerel.B",
     "matchedClass": "27b",
-    "challengeId": 2
+    "challengeId": 4
   },
   {
     "userId": "0594",
@@ -102,7 +102,7 @@ export const matches: Match[] = [
     "matchedUserId": "0480",
     "matchedUsername": "Margad.T",
     "matchedClass": "26a",
-    "challengeId": 2
+    "challengeId": 4
   },
   {
     "userId": "0484",
